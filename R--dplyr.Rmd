@@ -1,0 +1,1009 @@
+---
+title: <br><center>Important Packages in R</center><br>
+author: <center>Ti-Ti Tung</center>
+date: <center>July, 2018</center>
+output: 
+  html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br><br>
+
+
+
+<P Align=center><img src="ggplot2.jpg"  width="150" height="150"  /><img src="dplyr.jpg"  width="150" height="150"  /><img src="tidyr.png"  width="150" height="150"  /><img src="stringr.png"  width="150" height="150"  /></p>
+
+
+
+<br>
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+Four Package Stars 
+====
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+
+
+-----
+
+<p align="right">https://www.rstudio.com</p>
+
+-  **ggplot2** -- data visualization
+   
+    -   
+            much powerful than basic plot function
+              
+-----
+
+-  **dplyr** -- relational data
+
+    -   mutating joins
+    -   filtering joins
+    -   set operations
+    
+    
+            comparing dplyr with SQL, dplyr is easier to learn
+
+-----
+
+-  **tidyr** -- tidy data
+
+    -   
+            Happy families are alike; every unhappy family is unhappy in its own way.
+            
+                                                                        - Leo Tolstoy
+            
+-----
+
+-  **stringr** -- string manipulation
+
+    -   RegExp (regular expressions)
+
+
+            basic skills in Text Mining  
+
+-----
+
+
+
+<br><br>
+
+<center><h3>Here we are !</h3></center><br>
+
+<P Align=center><img src="program.jpg"    /></p>
+
+<br><br><br>
+
+
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+<center><h2>dplyr</h2></center>
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+
+
+ggplot2讓我們發現很多資料上所無法察覺的洞見。但在使用視覺化系統之前，我們必須有一個乾淨的Dataset。ggplot2的內建設定也是必須輸入一個dataframe形式的資料型態，如vector或list的形式，是無法使用ggplot2或是R中很多強大的視覺化系統的。然而在就算在dataframe形式下，不同的row或column常會出現缺失值(NA)之情況，因此本節將介紹的dplyr和tidyr套件，能夠幫我們transform我們的data成乾淨(tidy data)和合乎使用的資料樣式。
+
+
+<br>
+
+##dplyr Tutorial
+
+
+-----
+
+  -  [dplyr v.s. SQL](https://www.r-bloggers.com/comparing-performance-on-dplyr-package-revoscaler-package-and-t-sql-on-simple-data-manipulation-tasks/)
+  -  [dplyr tutorial - RPubs](https://rpubs.com/justmarkham/dplyr-tutorial)
+  -  [dplyr: A grammar of data manipulation](https://github.com/tidyverse/dplyr)    
+  -  [R for Data Science](http://r4ds.had.co.nz/) 
+  -  [Hadley Wickham  個人網站](http://hadley.nz/)
+
+<br>
+
+
+<br><br>
+
+
+##**1. Prerequisites**
+
+```{r}
+library(nycflights13)
+# library(tidyverse)
+
+```
+
+```{r include = FALSE}
+library(tidyverse)
+```
+
+
+<br>
+
+###**1.1. flights ovrtview**
+
+
+  
+```{r}
+# 2013年紐約市航班資料
+nycflights13::flights
+```
+
+-----
+
+<p align="right">[美國交通統計局](https://www.transtats.bts.gov/DatabaseInfo.asp?DB_ID=120&Link=0)</p>
+
+####**Data type review**
+
+    -  int  : integers.
+    -  dbl  : doubles, or real numbers.
+    -  chr  : character vectors, or strings.
+    -  dttm : date-times (a date + a time).
+    -  lgl  : logical, vectors that contain only TRUE or FALSE.
+    -  date : dates.
+    -  fctr : factors, which R uses to represent categorical variables with fixed possible values.
+    
+
+
+-----
+
+<br>
+
+##**2. dplyr basics**
+        
+
+<br>
+
+**dplyr中最基本，也是最常用的**5 + 1**大函數，可以解決你絕大多數在data transform上的問題 : *
+     
+-----
+
+  -  filter ( ) : Pick observations by their values.
+  -  arrange ( ) : Reorder the rows.
+  -  select ( ) : Pick variables by their names.
+  -  mutate ( ) : Create new variables with functions of existing variables.
+  -  summarise ( ) : Collapse many values down to a single summary.  
+  
+      -  group_by ( ) : 
+  
+  
+          以上五項都能夠與group_by()一同使用，能夠對整個資料庫進行分組(group)，進而改變五大函數的運作範疇。
+   
+
+<br>
+
+
+**函數使用方法 -- 以上的五個函數操作方式都相同 :** 
+
+-----     
+
+  1.  第1個參數 : 某一資料框架
+  2.  第2個參數 : 使用變數名稱，設立條件
+  3.  產出 : 產生新的資料框架     
+  
+<br>
+  
+-----
+
+###**2.1. Filter observations with filter()**
+  
+-----
+
+####Filter與函數subset概念幾乎相同。flights的原始資料把年、月、日分成了3個column。
+
+<br>
+ 
+取出2013/1/1的航班資料 : 
+
+  1.  參數 1  : flights
+  2.  參數 2  : 針對 month  及day 做 filter : **month == 1, day == 1**
+  3.  產出 : 2013/1/1的航班資料  
+  
+```{r  }
+filter(flights, month == 1, day == 1)
+
+```
+
+<br>
+
+```{r}
+# 將塞選後的output輸入新的變數中
+january_1 <- filter(flights, month == 1, day == 1)
+```
+
+<br>
+
+###2.1.1. Logical operators
+  
+-----
+
+<P Align=center><img src="logic_operation.jpg"    /></p>
+
+-----
+
+<p align="right">[Logical operators Tutorial](https://joe11051105.gitbooks.io/r_basic/content/control_flow/logic_decision.html)</p>
+
+<br>
+
+      -  ||、&& for 單一值
+      
+      -  | 、 & for vector
+
+<br>
+
+
+```{r results='hide'}
+# 相同產出，不同運算方式
+filter(flights, month == 11 | month == 12)
+filter(flights, month %in% c(11, 12))
+```
+
+```{r echo = FALSE}
+# 相同產出，不同運算方式
+filter(flights, month == 11 | month == 12)[1:5,]
+
+```
+
+<br>
+
+-----
+
+###2.1.2. De Morgan’s law: 
+
+      -   !(x & y)  =  !x | !y
+      
+      -   !(x | y)  =  !x & !y
+
+-----
+
+延誤不超過兩個小時的航班 : 
+```{r results='hide'}
+# 相同產出，不同運算方式
+filter(flights, !(arr_delay > 120 | dep_delay > 120))
+filter(flights, arr_delay <= 120, dep_delay <= 120)
+```
+
+```{r echo = FALSE}
+# 相同產出，不同運算方式
+filter(flights, arr_delay <= 120, dep_delay <= 120)[1:5,]
+
+```
+
+
+<br>
+
+
+###2.1.3. Missing values -- **NA**
+
+        Super 重要  !!!!!!
+
+
+-----
+
+**NULL**值，是長度為0的vector，不是NA
+```{r}
+X <- c()
+
+class(X)
+```
+
+<br>
+
+NA值 (not available) 
+```{r results='hide'}
+NA > 5
+#> [1] NA
+10 == NA
+#> [1] NA
+NA + 10
+#> [1] NA
+NA / 2
+#> [1] NA
+```
+
+<br>
+
+NA值具有傳染信，涉及NA的所有運算，產出都是NA
+```{r }
+NA == NA
+
+( x <- c(1, 2, 3, NA) )
+x + 1
+sum(x)
+# 你能想到的函數中，都有這個參數 :　na.rm = TRUE
+sum(x, na.rm = TRUE)
+```
+
+<br>
+
+####remove NA
+```{r }
+( df <- tibble(x = c(1, NA, 2, 3, NA), y = 1:5) )
+
+# Logical operators
+is.na(df$x)
+
+```
+
+<br>
+
+```{r}
+
+filter(df, is.na(x) )
+
+# 用 ! 反轉其意義
+filter(df, !is.na(x) )
+
+```
+
+
+<br>
+
+
+
+
+###**2.2. Arrange rows with arrange()**
+
+-----
+
+```{r}
+arrange(flights, year, month, day)
+```
+
+<br>
+
+原是設定是遞增，用desc()改成遞減
+```{r}
+arrange(flights, desc(dep_delay))  
+```
+
+
+<br>
+
+NA，永遠會被排在最後面
+```{r}
+( df <- tibble(x = c(1, NA, 2, 3, NA), y = 1:5) )
+arrange(df, x)
+```
+
+
+<br>
+
+
+###**2.3. Select columns with select()**
+  
+
+-----
+
+
+```{r results='hide'}
+# Select columns by column name
+select(flights, year, month, day)[1:3,]
+# Select all columns between year and day (inclusive)
+select(flights, year:day)[1:3,]
+# Select all columns except those from year to day (inclusive)
+select(flights, -(year:day))[1:3,]
+```
+
+
+當你的dataset很大，column非常多時，你可能需要 :
+
+        -   starts_with("kcuF"): matches names that begin with “kcuF”.
+
+        -   ends_with("kcuF"): matches names that end with “kcuF”.
+
+        -   contains("kcuF"): matches names that contain “kcuF”.
+
+-----
+
+<br>
+
+#####ends_with()
+```{r}
+select(flights, 
+  year, 
+  ends_with("delay"), 
+  distance
+)
+```
+
+<br>
+
+###**2.4. Add new variables with mutate()**
+  
+
+-----
+
+<br>
+
+####**2.4.1.  TAIEX ovrtview**
+
+        library(tidyquant)
+        library("tidyverse")
+
+```{r include=FALSE}
+library(tidyquant)
+library("tidyverse")
+library(dplyr)
+```
+
+```{r}
+#=====================================================
+# Taiwan weighted index
+#=====================================================
+
+# library(tidyquant)
+
+library(tidyquant)
+# 台灣大盤資料
+TAIEX <- tq_get("^TWII", from = "2010-01-01")
+
+head(TAIEX)
+```
+
+-----
+
+<br>
+
+####**2.4.2.  每日最高價與最低價之價差**
+
+
+```{r}
+# 只留三個變數
+TAIEX <- select(TAIEX, c(date, high, low))
+
+# 做一個新column - spread
+# 價差(spread) = 最高價(high) - 最低價(low)
+spread <- mutate(TAIEX, spread = high - low)
+
+head(spread, 10)
+
+```
+
+<br>
+
+####you only want to keep the new variables, use transmute():
+```{r}
+library(dplyr)
+spread <- transmute(TAIEX, 
+              spread = high - low
+            )
+
+head(spread, 10)
+```
+
+
+
+<br>
+
+####**2.4.3.  收盤價取log**
+```{r}
+# 台灣大盤資料
+TAIEX <- tq_get("^TWII", from = "2010-01-01")
+
+price_log <- mutate(TAIEX, 
+              price_log = log(close)
+            )
+head(price_log)
+
+
+```
+
+
+<br>
+
+####用ggplot畫出price_log
+```{r}
+
+ggplot(data = price_log) + 
+  geom_line(mapping = aes(x = date, y = price_log))
+
+
+```
+
+<br>
+
+####用ggplot畫出close
+```{r}
+
+ggplot(data = price_log) + 
+  geom_jitter(mapping = aes(x = date, y = close))
+
+```
+
+
+<br>
+
+####geom_smooth的close
+```{r}
+
+ggplot(data = price_log) + 
+  geom_smooth(mapping = aes(x = date, y = close))
+
+```
+
+
+<br>
+
+
+###**2.5. Grouped summaries with summarise()**
+  
+
+-----
+
+
+```{r}
+# 算出dep_delay的平均值
+summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
+```
+
+<br>
+
+-----
+
+        summarise()本身並不是特別有用，取出整條column的mean用R內建函數都做得到。但搭配group_by，就煥然一新了。這會將原本完整的資料分組(group)，再進行summarise，非常實用。
+
+-----
+
+<br>
+
+
+###**2.5.1. 每個月的誤點平均值**
+
+```{r}
+# group_by對資料分組，每月一組
+by_month <- group_by(flights, year, month)
+
+# 雖然使用完group_by看起來沒變化，但已經將資料分成12組了
+## # Groups:   year, month [12]
+by_month
+
+```
+
+
+<br>
+
+
+**對資料中的每個月進行summarise**
+
+-----
+
+```{r}
+# 每個月的誤點平均
+( x <- summarise(by_month, delay = mean(dep_delay, na.rm = TRUE)) )
+```
+
+<br>
+
+**6、7月的班機delay時間，平均下來比其他月份都高**
+
+-----
+
+```{r}
+ggplot(data = x, mapping = aes(x = factor(month), y = delay)) + 
+  geom_col()
+
+```
+
+
+<br><br><br>
+
+
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+<center><h2>pipe -- %>% </h2></center>
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+**將程式碼連接管線pipe (%>%)，助於程式碼閱讀**
+
+-----
+
+**對資料中的每個月進行summarise**
+```{r}
+# 更加簡單明瞭
+flights %>% 
+  group_by(year, month) %>% 
+  summarise(delay = mean(dep_delay, na.rm = TRUE)) %>% 
+  ggplot(mapping = aes(x = factor(month), y = delay)) + 
+  geom_col()
+
+```
+
+<br>
+
+###**Exercises 1 **
+
+-----
+
+```{r}
+by_dest <- group_by(flights, dest)
+delay <- summarise(by_dest,
+  count = n(),
+  dist = mean(distance, na.rm = TRUE),
+  delay = mean(arr_delay, na.rm = TRUE)
+)
+delay <- filter(delay, count > 20, dest != "HNL")
+
+# It looks like delays increase with distance up to ~750 miles 
+# and then decrease. Maybe as flights get longer there's more 
+# ability to make up delays in the air?
+ggplot(data = delay, mapping = aes(x = dist, y = delay)) +
+  geom_point(aes(size = count), alpha = 1/3) +
+  geom_smooth(se = FALSE)
+```
+
+
+<br>
+
+###**Exercises 2 **
+
+-----
+
+```{r}
+delays <- flights %>% 
+  group_by(dest) %>% 
+  summarise(
+    count = n(),
+    dist = mean(distance, na.rm = TRUE),
+    delay = mean(arr_delay, na.rm = TRUE)
+  ) %>% 
+  filter(count > 20, dest != "HNL")
+
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+delays <- not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(
+    delay = mean(arr_delay)
+  )
+
+ggplot(data = delays, mapping = aes(x = delay)) + 
+  geom_freqpoly(binwidth = 10)
+
+delays <- not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(
+    delay = mean(arr_delay, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(data = delays, mapping = aes(x = n, y = delay)) + 
+  geom_point(alpha = 1/10)
+```
+
+
+
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+<center><h2>tidyr</h2></center>
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+-----
+
+        Happy families are alike; every unhappy family is unhappy in its own way.
+        
+                                                                    - Leo Tolstoy
+<br>
+
+##tidyr Tutorial
+
+-----
+
+  -  [*Tidy Data*](http://www.jstatsoft.org/v59/i10/paper) paper published in the Journal of Statistical Software 
+  -  [R for Data Science](http://r4ds.had.co.nz/) 
+  -  [Hadley Wickham  個人網站](http://hadley.nz/)
+
+-----
+
+<p align="right">以下所有圖片出處 : [R for Data Science](http://r4ds.had.co.nz/tidy-data.html) </p>
+
+<br>
+ 
+**整齊的資料集(tidy data)有三個具關聯性規則 :** 
+
+-----
+
+  1.  Each variable must have its own column.
+  2.  Each observation must have its own row.
+  3.  Each value must have its own cell.
+
+<br>  
+  
+<P Align=center><img src="tidydata.jpg"/></p>  
+  
+-----
+
+<br><br>
+
+##**3. tidyr basics**
+
+  1.  Spreading and gathering
+  
+  2.  Separating and uniting
+
+
+
+<br>
+
+<P Align=center><img src="gather_separate.jpg"/></p> 
+
+<br>
+
+
+###**3.1. Gathering**
+  
+```{r}
+# data ovrtview
+table4a
+
+# transform
+table4a %>% 
+  gather(`1999`, `2000`, key = "year", value = "cases")
+```
+
+-----
+
+<br>  
+  
+<P Align=center><img src="gather.jpg"/></p>  
+  
+-----
+
+
+<br>
+
+
+###**3.2. Spreading**
+  
+```{r}
+# data ovrtview
+table2
+
+# transform
+table2 %>%
+    spread(key = type, value = count)
+```
+
+-----
+  
+<br>  
+  
+<P Align=center><img src="Spread.jpg"/></p>  
+  
+-----
+
+<br>
+
+
+###**3.3. Separate**
+  
+```{r}
+# data ovrtview
+table3
+
+# transform
+table3 %>% 
+  separate(rate, into = c("cases", "population"))
+```
+
+-----
+  
+<br>  
+  
+<P Align=center><img src="Separate.jpg"/></p>  
+  
+-----
+
+<br>
+
+
+###**3.4. Unite**
+  
+```{r}
+# data ovrtview
+table5
+
+# transform
+table5 %>% 
+  unite(new, century, year)
+```
+
+-----
+  
+<br>  
+  
+<P Align=center><img src="Unite.jpg"/></p>  
+  
+-----
+
+
+
+
+<br>
+
+###**3.4. Missing values**
+
+-----
+
+Changing the representation of a dataset brings up an important subtlety of missing values. Surprisingly, a value can be missing in one of two possible ways:
+
+**-   Explicitly, i.e. flagged with NA.**
+
+**-   Implicitly, i.e. simply not present in the data.**
+
+-----
+
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
+  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
+)
+
+
+stocks
+```
+
+
+<br>
+
+**-   Explicitly : 2015-Q4.**
+
+**-   Implicitly : 2016-Q1.**
+
+```{r}
+stocks %>% 
+  spread(year, return)
+```
+
+<br>
+
+set na.rm = TRUE in gather() to turn explicit missing values implicit:
+
+```{r}
+stocks %>% 
+  spread(year, return) %>% 
+  gather(year, return, `2015`:`2016`, na.rm = TRUE)
+```
+
+<br>
+
+Implicitly的NA，絕對比Explicitly的NA，來的難以處理，利用**complete( )** :
+
+-   找出資料的規律，確定所有應該出現的值，在必要時，植入NA
+
+```{r}
+stocks %>% 
+  complete(year, qtr)
+```
+
+
+<br>
+
+<P Align=center><img src="tidy_NA.jpg"/></p> 
+
+<br>
+
+###**Excited Exercises **
+
+-----
+
+[2014 World Health Organization Global Tuberculosis Report](http://www.who.int/tb/country/data/download/en/.)
+```{r}
+who <- read.csv("TB_burden_countries_2018-08-01.csv")
+
+who <- select(who, 1:3, year,new_sp_m014:newrel_f65)
+
+who <- as_tibble(who)
+
+head(who)
+```
+
+-----
+
+```{r}
+who1 <- who %>% 
+  gather(new_sp_m014:newrel_f65, key = "key", value = "cases", na.rm = TRUE)
+
+who1
+```
+
+-----
+
+```{r}
+who1 %>% 
+  count(key)
+```
+
+
+-----
+
+```{r}
+who2 <- who1 %>% 
+  mutate(key = stringr::str_replace(key, "newrel", "new_rel"))
+head(who2)
+```
+
+-----
+
+```{r}
+who3 <- who2 %>% 
+  separate(key, c("new", "type", "sexage"), sep = "_")
+head(who3)
+
+
+```
+
+
+-----
+
+
+```{r}
+who3 %>% 
+  count(new)
+
+who4 <- who3 %>% 
+  select(-new, -iso2, -iso3)
+```
+
+-----
+
+```{r}
+who5 <- who4 %>% 
+  separate(sexage, c("sex", "age"), sep = 1)
+head(who5)
+```
+
+-----
+
+```{r}
+who %>%
+  gather(key, value, new_sp_m014:newrel_f65, na.rm = TRUE) %>% 
+  mutate(key = stringr::str_replace(key, "newrel", "new_rel")) %>%
+  separate(key, c("new", "var", "sexage")) %>% 
+  select(-new, -iso2, -iso3) %>% 
+  separate(sexage, c("sex", "age"), sep = 1)
+
+```
+
+
+
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+<center><h2>stringr</h2></center>
+
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+
+
+
+<br><br>
+    
+    
+    
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+<br>
