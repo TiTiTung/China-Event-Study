@@ -1,6 +1,6 @@
 
 
-# <center>智能驅動投資研究</center>
+# <P Align=center>智能驅動投資研究</p>
 
 
 >該案子由位於深圳的智道智慧科技所發起, 由中央大學與重慶郵電大學的教授群共同合作, 為大陸境內最早為機構客戶提供智能資產配置解決方案的金融科技企業。案子全名為智能事件驅動投資研究, 內容為利用財經劑量的演算法 (事件研究法), 分析大陸地區的重要事件, 並研究該事件發現前後的個股的股價變化, 研究其套利空間。
@@ -65,14 +65,14 @@ grepl( '(定向增发|定增)' ,alldat$news)&
 * **事件基本信息**：
 根據RCode 3-1所制定的規則, 定向增發事件在測試的金融新聞文本數據庫中共出現了3418次。其中由於不同媒體可能報導同一個事件造成此事件被重覆計算多次, 或是事件發生後幾日不斷地被媒體討論, 因此在我們的計算中, 若同一個股同一事件在前10日內已發生過, 則該次事件不列入計算。在考慮上述二條件後, 我們留下了2853次事件, 後續其它事件皆已調整重覆發生事件。定向增發在2015年至2017年發生的次數較多, 主要的行業別是工業, 詳細的事件數據列表如圖所示。
 ![](https://i.imgur.com/jIkxarA.png)
-<center><img src="https://i.imgur.com/cLOpzar.png" width="70%"></center>
-<center><img src="https://i.imgur.com/ekuPXHv.png" width="70%"></center>
-<center><img src="https://i.imgur.com/xf484mr.png" width="70%"></center>
-<center><img src="https://i.imgur.com/5wnn21C.png" width="70%"></center>
+<P Align=center><img src="https://i.imgur.com/cLOpzar.png" width="70%"></p>
+<P Align=center><img src="https://i.imgur.com/ekuPXHv.png" width="70%"></p>
+<P Align=center><img src="https://i.imgur.com/xf484mr.png" width="70%"></p>
+<P Align=center><img src="https://i.imgur.com/5wnn21C.png" width="70%"></p>
 
 
 * **投資分析**：
 「定向增發」對於企業來說應該是一個正面的信息, 然而在我們的實證中卻得到不同的結 果。短期績效 (10日) 中的累積異常報酬並不明顯, 而長期績效 (60日) 中的累積異常報酬甚至 為反向的結果。在這個小節中, 我們擴大事件窗口為事件日前60日到事件發生後60日以, 進 一步去探討為什麽定向增發事件會產生與文獻上不同的結果。相關結果如圖所示, 其中有 二個結論是值得註意的。首先, 定向增發事件發生的期間, 市場普遍呈現多頭, 從事件發生前 60日到事件日後60日, 平均而言市場累積報酬率超過7.5%。再者, 個股的原始報酬率也與市場報酬相似呈現向上的趨勢, 但是在事件出現在媒體之前, 原始報酬率就已經上漲約7.5%, 我們認為這可能是「信息不對稱」所造成的結果。換句話說, 在中國市場中很多對於個股有利的信息在公開之前, 早已經被部分投資人所掌握, 所以提前反應了該事件的影響。
-<center><img src="https://i.imgur.com/yFpnUGw.png" width="70%"></center>
-<center><img src="https://i.imgur.com/ek0FLOC.png" width="70%"></center>
-<center><img src="https://i.imgur.com/fSO338j.png" width="70%"></center>
+<P Align=center><img src="https://i.imgur.com/yFpnUGw.png" width="70%"></p>
+<P Align=center><img src="https://i.imgur.com/ek0FLOC.png" width="70%"></p>
+<P Align=center><img src="https://i.imgur.com/fSO338j.png" width="70%"></p>
